@@ -30,6 +30,6 @@ class ProgramArguments(args: Array[String]) {
   }
 
   def repo = {
-    _switches.getOrElse("repo", "pwd".!!)
+    _switches.getOrElse("repo", "pwd".!!.trim)
   }
 }
