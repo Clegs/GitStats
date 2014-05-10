@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * Hold the data retrieved from git.
  */
-class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostGenerator])(implicit config: Config) {
+class ValueTable(repository: String, generators: Array[NormalGenerator], postGenerators: Array[PostGenerator])(implicit config: Config) {
   /**
    * Store all of the data in the table by generator.
    */
@@ -24,7 +24,7 @@ class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostG
     // Do normal processing
     for (generator <- generators; daysBack <- 1 to config.days) {
       val dateTime = DateTime.now - daysBack.days
-      val value = generator valueForDate(dateTime, config.repositories(0))
+      val value = generator valueForDate(dateTime, repository)
 
       val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
       genList += value
@@ -40,15 +40,21 @@ class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostG
   }
 
   /**
-   * Print the value table to standard output.
+   * Print the headers to standard output.
    * @param separator The separator to use between entries.
    */
-  def print(separator: String) {
+  def printHeader(separator: String) {
     // Print the headers.
     val headers = new mutable.MutableList[String]
     for (generator <- allGenerators) headers += generator.header mkString separator
     println(headers mkString separator)
+  }
 
+  /**
+   * Print the value table to standard output.
+   * @param separator The separator to use between entries.
+   */
+  def print(separator: String) {
     // Print the value table
     for (daysBack <- 1 to config.days) {
       val data = new ListBuffer[String]
