@@ -57,6 +57,7 @@ object GitStats {
       head("GitStats", getClass.getPackage.getImplementationVersion)
       opt[Int]('d', "days") optional() action { (x, c) => c.copy(days = x) } validate { x => if (x > 0) success else failure("--days must be positive.") } text "Number of days back to generate statistics on."
       opt[Int]("delta") optional() action { (x, c) => c.copy(delta = x) } validate { x => if (x > 0) success else failure("--delta must be positive.") } text "Number of days to go back by."
+      opt[Unit]("today") optional() action { (_, c) => c.copy(today = true) } text "Include today's date. (Defaults to starting yesterday.)"
       arg[String]("<repository>...") unbounded() optional() action { (x, c) => c.copy(repositories = c.repositories :+ x) } text "Repositories generate statistics on."
       help("help") text "Prints this usage text."
     }

@@ -21,8 +21,10 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
    * Calculate the values of the value table.
    */
   def calculate() = {
+    val startNum = if (config.today) 0 else 1
+
     // Do normal processing
-    for (generator <- generators; daysBack <- 1 to config.days) {
+    for (generator <- generators; daysBack <- startNum to config.days) {
       val dateTime = DateTime.now - daysBack.days
       val value = generator valueForDate(dateTime, repository)
 
@@ -31,8 +33,8 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
     }
 
     // Calculated columns on the value table
-    for (generator <- postGenerators; daysBack <- 1 to config.days) {
-      val value = generator valueForIndex(daysBack - 1, this)
+    for (generator <- postGenerators; daysBack <- startNum to config.days) {
+      val value = generator valueForIndex(daysBack - startNum, this)
 
       val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
       genList += value
@@ -55,14 +57,16 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
    * @param separator The separator to use between entries.
    */
   def print(separator: String) {
+    val startNum = if (config.today) 0 else 1
+
     // Print the value table
-    for (daysBack <- 1 to config.days) {
+    for (daysBack <- startNum to config.days) {
       val data = new ListBuffer[String]
 
       for (generator <- allGenerators) {
         val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
         if (daysBack <= config.days) {
-          data += genList(daysBack - 1) mkString separator
+          data += genList(daysBack - startNum) mkString separator
         }
         else {
           data += "0"
