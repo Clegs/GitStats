@@ -1,6 +1,6 @@
 package com.calebgo.gitstats.generator
 
-import com.calebgo.gitstats.{ValueTable, ProgramArguments}
+import com.calebgo.gitstats.ValueTable
 
 /**
  * Generate file and line differences on a daily basis.

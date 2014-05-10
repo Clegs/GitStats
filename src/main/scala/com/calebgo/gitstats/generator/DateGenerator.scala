@@ -1,6 +1,5 @@
 package com.calebgo.gitstats.generator
 
-import com.calebgo.gitstats.{Config, ProgramArguments}
 import org.joda.time.DateTime
 import com.github.nscala_time.time.StaticDateTimeFormat
 

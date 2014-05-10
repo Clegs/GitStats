@@ -1,7 +1,7 @@
 package com.calebgo.gitstats.generator
 
 import scala.sys.process._
-import com.calebgo.gitstats.{Config, ProgramArguments}
+import com.calebgo.gitstats.Config
 import org.joda.time.DateTime
 import com.github.nscala_time.time.StaticDateTimeFormat
 
