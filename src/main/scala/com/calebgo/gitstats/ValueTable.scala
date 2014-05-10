@@ -24,7 +24,7 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
     val startNum = if (config.today) 0 else 1
 
     // Do normal processing
-    for (generator <- generators; daysBack <- startNum to config.days) {
+    for (generator <- generators; daysBack <- startNum to config.days if daysBack % config.delta == 0) {
       val dateTime = DateTime.now - daysBack.days
       val value = generator valueForDate(dateTime, repository)
 
@@ -33,8 +33,8 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
     }
 
     // Calculated columns on the value table
-    for (generator <- postGenerators; daysBack <- startNum to config.days) {
-      val value = generator valueForIndex(daysBack - startNum, this)
+    for (generator <- postGenerators; daysBack <- startNum to config.days if daysBack % config.delta == 0) {
+      val value = generator valueForIndex((daysBack / config.delta) - startNum, this)
 
       val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
       genList += value
@@ -60,13 +60,13 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
     val startNum = if (config.today) 0 else 1
 
     // Print the value table
-    for (daysBack <- startNum to config.days) {
+    for (daysBack <- startNum to config.days if daysBack % config.delta == 0) {
       val data = new ListBuffer[String]
 
       for (generator <- allGenerators) {
         val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
         if (daysBack <= config.days) {
-          data += genList(daysBack - startNum) mkString separator
+          data += genList((daysBack / config.delta) - startNum) mkString separator
         }
         else {
           data += "0"
