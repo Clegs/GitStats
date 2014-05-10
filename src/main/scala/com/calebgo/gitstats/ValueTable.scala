@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * Hold the data retrieved from git.
  */
-class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostGenerator])(implicit arguments: ProgramArguments) {
+class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostGenerator])(implicit config: Config) {
   /**
    * Store all of the data in the table by generator.
    */
@@ -22,16 +22,16 @@ class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostG
    */
   def calculate() = {
     // Do normal processing
-    for (generator <- generators; daysBack <- 1 to arguments.days) {
+    for (generator <- generators; daysBack <- 1 to config.days) {
       val dateTime = DateTime.now - daysBack.days
-      val value = generator valueForDate dateTime
+      val value = generator valueForDate(dateTime, config.repositories(0))
 
       val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
       genList += value
     }
 
     // Calculated columns on the value table
-    for (generator <- postGenerators; daysBack <- 1 to arguments.days) {
+    for (generator <- postGenerators; daysBack <- 1 to config.days) {
       val value = generator valueForIndex(daysBack - 1, this)
 
       val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
@@ -50,12 +50,12 @@ class ValueTable(generators: Array[NormalGenerator], postGenerators: Array[PostG
     println(headers mkString separator)
 
     // Print the value table
-    for (daysBack <- 1 to arguments.days) {
+    for (daysBack <- 1 to config.days) {
       val data = new ListBuffer[String]
 
       for (generator <- allGenerators) {
         val genList = table.getOrElseUpdate(generator, new ListBuffer[Array[String]])
-        if (daysBack <= arguments.days) {
+        if (daysBack <= config.days) {
           data += genList(daysBack - 1) mkString separator
         }
         else {

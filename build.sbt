@@ -17,3 +17,8 @@ maintainer in Debian := "Clegs"
 mainClass := Some("com.calebgo.gitstats.GitStats")
 
 libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "1.0.0"
+
+// Used for command line parsing.
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
+
+resolvers += Resolver.sonatypeRepo("public")

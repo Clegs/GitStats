@@ -19,7 +19,7 @@ object GitStats {
       System exit 1
     }
 
-    implicit val arguments = new ProgramArguments(args)
+    implicit val config = parseArguments(args)
 
     val dateGenerator = new DateGenerator
     val lineGenerator = new LineGenerator
@@ -37,4 +37,27 @@ object GitStats {
    * @return True if git is installed and accessible through the PATH. False otherwise.
    */
   def gitInstalled = "which git" ! ProcessLogger(line => ()) == 0
+
+  /**
+   * Parse the arguments and return the configuration.
+   * @param args The arguments passed to the application.
+   * @return The parsed configuration for the application.
+   */
+  def parseArguments(args: Array[String]) = {
+    val parser = new scopt.OptionParser[Config]("GitStats") {
+      head("GitStats", getClass.getPackage.getImplementationVersion)
+      opt[Int]('d', "days") optional() action { (x, c) => c.copy(days = x) } validate { x => if (x > 0) success else failure("--days must be positive.") } text "Number of days back to generate statistics on."
+      opt[Int]("delta") optional() action { (x, c) => c.copy(delta = x) } validate { x => if (x > 0) success else failure("--delta must be positive.") } text "Number of days to go back by."
+      arg[String]("<repository>...") unbounded() optional() action { (x, c) => c.copy(repositories = c.repositories :+ x) } text "Repositories generate statistics on."
+      help("help") text "Prints this usage text."
+    }
+
+    parser.parse(args, Config()) map { config =>
+      if (config.repositories.length == 0) config.copy(repositories = config.repositories :+ "pwd".!!.trim)
+      else config
+    } getOrElse {
+      System exit 2
+      null
+    }
+  }
 }

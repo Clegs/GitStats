@@ -5,7 +5,7 @@ import com.calebgo.gitstats.{ValueTable, ProgramArguments}
 /**
  * Generate file and line differences on a daily basis.
  */
-class DifferenceGenerator(implicit arguments: ProgramArguments) extends PostGenerator {
+class DifferenceGenerator extends PostGenerator {
   override def header: Array[String] = Array("LineDifference", "FileDifference")
 
   override def valueForIndex(index: Int, valueTable: ValueTable): Array[String] = {
