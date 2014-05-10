@@ -7,7 +7,7 @@ import com.calebgo.gitstats.generator.{DifferenceGenerator, LineGenerator, DateG
  * Git statics generator. This program will generate statistics.
  *
  * Program Usage:
- * GitStats [-d days] [repository]
+ * GitStats [-d days] [-t] [repository]
  *
  * If no repository is given then the statistics will be generated off of the current
  * working directory.
