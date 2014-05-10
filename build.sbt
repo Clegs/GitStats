@@ -3,14 +3,14 @@ import com.typesafe.sbt.packager.Keys._
 
 name := "gitstats"
 
-version := "0.1"
+version := "0.2"
 
 scalaVersion := "2.11.0"
 
 // Setup parameters for Java Application
 packageArchetype.java_application
 
-packageDescription in Debian := "Statistics on Git Repository"
+packageDescription in Debian := "Statistics on a Git Repository"
 
 maintainer in Debian := "Clegs"
 
