@@ -59,8 +59,14 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
   def print(separator: String) {
     val startNum = if (config.today) 0 else 1
 
+    // There is an option to have the data sorted ascending.
+    val startIndex = if (config.sortAscending) config.days else startNum
+    val endIndex = if (config.sortAscending) startNum else config.days
+
+    val byCount = if (startIndex > endIndex) -1 else 1
+
     // Print the value table
-    for (daysBack <- startNum to config.days if daysBack % config.delta == 0) {
+    for (daysBack <- startIndex to endIndex by byCount if daysBack % config.delta == 0) {
       val data = new ListBuffer[String]
 
       for (generator <- allGenerators) {
