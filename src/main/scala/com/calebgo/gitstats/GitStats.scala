@@ -26,10 +26,11 @@ object GitStats {
     val lineGenerator = new LineGenerator
     val commitGenerator = new CommitGenerator
     val differenceGenerator = new DifferenceGenerator
+    val commitDifferenceGenerator = new CommitDifferenceGenerator
 
     var headerPrinted = false
     for (repository <- config.repositories) {
-      val valueTable = new ValueTable(repository, Array(repositoryNameGenerator, dateGenerator, lineGenerator, commitGenerator), Array(differenceGenerator))
+      val valueTable = new ValueTable(repository, Array(repositoryNameGenerator, dateGenerator, lineGenerator, commitGenerator), Array(differenceGenerator, commitDifferenceGenerator))
 
       if (!headerPrinted) {
         valueTable printHeader ","
