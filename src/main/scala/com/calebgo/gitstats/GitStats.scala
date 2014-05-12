@@ -1,7 +1,7 @@
 package com.calebgo.gitstats
 
 import scala.sys.process._
-import com.calebgo.gitstats.generator.{RepositoryNameGenerator, DifferenceGenerator, LineGenerator, DateGenerator}
+import com.calebgo.gitstats.generator._
 
 /**
  * Git statics generator. This program will generate statistics.
@@ -24,11 +24,12 @@ object GitStats {
     val repositoryNameGenerator = new RepositoryNameGenerator
     val dateGenerator = new DateGenerator
     val lineGenerator = new LineGenerator
+    val commitGenerator = new CommitGenerator
     val differenceGenerator = new DifferenceGenerator
 
     var headerPrinted = false
     for (repository <- config.repositories) {
-      val valueTable = new ValueTable(repository, Array(repositoryNameGenerator, dateGenerator, lineGenerator), Array(differenceGenerator))
+      val valueTable = new ValueTable(repository, Array(repositoryNameGenerator, dateGenerator, lineGenerator, commitGenerator), Array(differenceGenerator))
 
       if (!headerPrinted) {
         valueTable printHeader ","
