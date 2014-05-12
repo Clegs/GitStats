@@ -4,15 +4,20 @@ import scala.sys.process._
 import com.calebgo.gitstats.generator._
 
 /**
- * Git statics generator. This program will generate statistics.
+ * Git statics generator. This program will generate statistics off of a given repository.
  *
  * Program Usage:
- * GitStats [-d days] [-t] [repository]
+ * gitstats [options] [repositories...]
+ * For help: gitstats --help
  *
  * If no repository is given then the statistics will be generated off of the current
  * working directory.
  */
 object GitStats {
+  /**
+   * Main entry point to the program.
+   * @param args Command line arguments. (See gitstats --help)
+   */
   def main(args: Array[String]) {
     if (!gitInstalled) {
       System.err.println("Git is not installed. Exiting.")
@@ -57,11 +62,14 @@ object GitStats {
   def parseArguments(args: Array[String]) = {
     val parser = new scopt.OptionParser[Config]("GitStats") {
       head("GitStats", getClass.getPackage.getImplementationVersion)
+      head("https://github.com/Clegs/GitStats")
+
       opt[Int]('d', "days") optional() action { (x, c) => c.copy(days = x) } validate { x => if (x > 0) success else failure("--days must be positive.") } text "Number of days back to generate statistics on. (default = 30)"
-      opt[Int]("delta") optional() action { (x, c) => c.copy(delta = x) } validate { x => if (x > 0) success else failure("--delta must be positive.") } text "Number of days to go back by."
-      opt[Unit]("today") optional() action { (_, c) => c.copy(today = true) } text "Include today's date. (Defaults to starting yesterday.)"
-      opt[Unit]("ascending") optional() action { (_, c) => c.copy(sortAscending = true) } text "Sort from oldest to newest."
-      arg[String]("<repository>...") unbounded() optional() action { (x, c) => c.copy(repositories = c.repositories :+ x) } text "Repositories generate statistics on. Use current directory no repository is specified."
+      opt[Int]('c', "delta") optional() action { (x, c) => c.copy(delta = x) } validate { x => if (x > 0) success else failure("--delta must be positive.") } text "Number of days to go back by."
+      opt[Unit]('t', "today") optional() action { (_, c) => c.copy(today = true) } text "Include today's date. (Defaults to starting yesterday.)"
+      opt[Unit]('a', "ascending") optional() action { (_, c) => c.copy(sortAscending = true) } text "Sort from oldest to newest."
+      arg[String]("<repository>...") unbounded() optional() action { (x, c) => c.copy(repositories = c.repositories :+ x) } text "Repositories to generate statistics on. The current directory will be used if none is specified."
+
       help("help") text "Prints this usage text."
     }
 
