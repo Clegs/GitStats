@@ -8,9 +8,9 @@ import com.github.nscala_time.time.StaticDateTimeFormat
  * Calculate the total number of commits.
  */
 class CommitGenerator extends NormalGenerator {
-  override def header: Array[String] = Array("Commits")
+  override def header = Array("Commits")
 
-  override def valueForDate(date: DateTime, repository: String): Array[String] = {
+  override def valueForDate(date: DateTime, repository: String) = {
     val formatter = StaticDateTimeFormat forPattern "yyyy-MM-dd HH:MM:SS"
     val dateString = formatter print date
 

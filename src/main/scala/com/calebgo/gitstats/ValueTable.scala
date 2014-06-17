@@ -45,7 +45,7 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
    * Print the headers to standard output.
    * @param separator The separator to use between entries.
    */
-  def printHeader(separator: String) {
+  def printHeader(separator: String) = {
     // Print the headers.
     val headers = new mutable.MutableList[String]
     for (generator <- allGenerators) headers += generator.header mkString separator
@@ -56,7 +56,7 @@ class ValueTable(repository: String, generators: Array[NormalGenerator], postGen
    * Print the value table to standard output.
    * @param separator The separator to use between entries.
    */
-  def print(separator: String) {
+  def print(separator: String) = {
     val startNum = if (config.today) 0 else 1
 
     // There is an option to have the data sorted ascending.
