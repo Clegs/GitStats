@@ -1,7 +1,7 @@
 import com.typesafe.sbt.SbtNativePackager._
 import com.typesafe.sbt.packager.Keys._
 
-name := "gitstats"
+name := "gitstatgen"
 
 version := "0.2"
 
